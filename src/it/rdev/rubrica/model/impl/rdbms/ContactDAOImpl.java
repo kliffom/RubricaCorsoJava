@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import it.rdev.rubrica.model.Contact;
@@ -64,29 +65,34 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 			
 			//Utilizzo l'id per inserire email e numtelefono se ci sono
 			
-			if(o.getEmails()!=null && !o.getEmails().isEmpty()) {
-				//aggiungo le email alla tabella con l'ID dell'utente appena aggiunto
-				for(String mail: o.getEmails()) {
-					
-					try {	//L'aggiunta di una mail già esistente lancia un'eccezione. La catturo e continuo l'esecuzione per aggiungere eventuali mail corrette
-					this.executeUpdate("INSERT INTO " + EMAIL_TABLE_NAME + "(email, ID_contatto) VALUES (?, ?)", mail, id);
-					} catch (SQLIntegrityConstraintViolationException e) {
-						System.out.println(e.getMessage());
-					}
-				}
-			}
+// VECCHIA IMPLEMENTAZIONE
 			
-			if(o.getPhoneNumbers()!=null && !o.getPhoneNumbers().isEmpty()) {
-				//aggiungo i numeri di telefono alla tabella con l'ID dell'utente appena aggiunto
-				for(String telnum: o.getPhoneNumbers()) {
-					
-					try {
-					this.executeUpdate("INSERT INTO " + TEL_TABLE_NAME + "(telefono, ID_contatto) VALUES (?, ?)", telnum, id);
-					} catch (SQLIntegrityConstraintViolationException e) {
-						System.out.println(e.getMessage());
-					}
-				}
-			}
+//			if(o.getEmails()!=null && !o.getEmails().isEmpty()) {
+//				//aggiungo le email alla tabella con l'ID dell'utente appena aggiunto
+//				for(String mail: o.getEmails()) {
+//					
+//					try {	//L'aggiunta di una mail già esistente lancia un'eccezione. La catturo e continuo l'esecuzione per aggiungere eventuali mail corrette
+//					this.executeUpdate("INSERT INTO " + EMAIL_TABLE_NAME + "(email, ID_contatto) VALUES (?, ?)", mail, id);
+//					} catch (SQLIntegrityConstraintViolationException e) {
+//						System.out.println(e.getMessage());
+//					}
+//				}
+//			}
+//			
+//			if(o.getPhoneNumbers()!=null && !o.getPhoneNumbers().isEmpty()) {
+//				//aggiungo i numeri di telefono alla tabella con l'ID dell'utente appena aggiunto
+//				for(String telnum: o.getPhoneNumbers()) {
+//					
+//					try {
+//					this.executeUpdate("INSERT INTO " + TEL_TABLE_NAME + "(telefono, ID_contatto) VALUES (?, ?)", telnum, id);
+//					} catch (SQLIntegrityConstraintViolationException e) {
+//						System.out.println(e.getMessage());
+//					}
+//				}
+//			}
+			
+			
+			addMailPhone(o, id.intValue());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -118,6 +124,8 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 	public boolean update(Contact t) throws SQLException {
 		boolean done = false;
 		
+		//TODO eliminare mail e telefono su t.id ed aggiungerli nuovamente prendendoli da t per avere quelli aggiornati 
+		
 		try {
 			int upd = this.executeUpdate("UPDATE " + TABLE_NAME + 
 					" SET name=?, surname=? WHERE id=?", 
@@ -129,11 +137,49 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 				done=true;
 			}
 			
+			this.executeUpdate("DELETE FROM " + EMAIL_TABLE_NAME + " WHERE ID_contatto=?", t.getId());
+			this.executeUpdate("DELETE FROM " + TEL_TABLE_NAME + " WHERE ID_contatto=?", t.getId());
+			
+			addMailPhone(t, t.getId());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return done;
+	}
+	
+	private void addMailPhone(Contact t, Integer id) throws SQLException {
+		
+		Object[] mails = new Object[t.getEmails().size()*2];
+		
+		Iterator<String> mailIt = t.getEmails().iterator();
+		StringBuffer sb = new StringBuffer("INSERT INTO " + EMAIL_TABLE_NAME + "(email, ID_contatto) VALUES ");
+		
+		for(int i=0; i<mails.length && mailIt.hasNext();) {
+			if(i>0) {
+				sb.append(", ");
+			}
+			sb.append("(?, ?)");
+			mails[i++] = mailIt.next();
+			mails[i++] = id;
+		}
+		this.executeUpdate(sb.toString(), mails);
+		
+		Object[] phones = new Object[t.getPhoneNumbers().size()*2];
+		
+		Iterator<String> phoneIt = t.getPhoneNumbers().iterator();
+		sb = new StringBuffer("INSERT INTO " + TEL_TABLE_NAME + "(telefono, ID_contatto) VALUES ");
+		
+		for(int i=0; i<phones.length && phoneIt.hasNext();) {
+			if(i>0) {
+				sb.append(", ");
+			}
+			sb.append("(?, ?)");
+			phones[i++] = phoneIt.next();
+			phones[i++] = id;
+		}
+		this.executeUpdate(sb.toString(), phones);
 	}
 
 }

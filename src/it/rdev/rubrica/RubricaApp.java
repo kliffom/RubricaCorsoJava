@@ -11,9 +11,20 @@ import it.rdev.rubrica.ui.AppFrame;
 
 public class RubricaApp {
 
+	
+	private static void print(RubricaController contr) {
+		
+		List<Contact> contatti = contr.getContactList();
+		for(Contact c: contatti) {
+			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname() + ", email:" + c.getEmails().toString() + ", telefono:" + c.getPhoneNumbers().toString());
+		}
+		
+	}
+	
 	// Main application
 	public static void main(String[] strings) {
 //		new AppFrame().setVisible(true);
+		
 		
 		//TEST FUNZIONALITA' AGGIUNTIVE
 		
@@ -25,32 +36,25 @@ public class RubricaApp {
 
 		
 		System.out.println(con.toString());
-		List<Contact> contatti = controller.getContactList();
-		for(Contact c: contatti) {
-			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname() + ", email:" + c.getEmails().toString() + ", telefono:" + c.getPhoneNumbers().toString());
-		}
+		
+		
+		print(controller);
+		
 		controller.addContact(con);
 		
-		contatti = controller.getContactList();
-		for(Contact c: contatti) {
-			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname() + ", email:" + c.getEmails().toString() + ", telefono:" + c.getPhoneNumbers().toString());
-		}
+		print(controller);
 		
 		con.setName("Modificato").setSurname("Test");
+		con.addEmail("altra@mail.it");
+		con.addPhoneNumber("0");
 		
 		controller.updateContact(con);
 		
-		contatti = controller.getContactList();
-		for(Contact c: contatti) {
-			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname() + ", email:" + c.getEmails().toString() + ", telefono:" + c.getPhoneNumbers().toString());
-		}
+		print(controller);
 		
-		controller.removeContact(con);
-		
-		contatti = controller.getContactList();
-		for(Contact c: contatti) {
-			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname() + ", email:" + c.getEmails().toString() + ", telefono:" + c.getPhoneNumbers().toString());
-		}
+//		controller.removeContact(con);
+//		
+//		print(controller);
 	}
 	
 }
