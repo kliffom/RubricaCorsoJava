@@ -46,8 +46,8 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 				done=true;
 			}
 			
-			//Utilizzo l'id per inserire email e numtelefono se ci sono
 			
+			//Utilizzo l'id per inserire email e numtelefono se ci sono
 			
 			if(o.getEmails()!=null && !o.getEmails().isEmpty()) {
 				//aggiungo le email alla tabella con l'ID dell'utente appena aggiunto
