@@ -1,7 +1,10 @@
 package it.rdev.rubrica.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.rdev.rubrica.config.ConfigKeys;
 import it.rdev.rubrica.config.Configuration;
@@ -11,15 +14,47 @@ import it.rdev.rubrica.model.ContactDAO;
 public class RubricaController {
 	
 	private ContactDAO dao;
+	private static final Map<String, String> CLASS_MAP;
+	
+	static {
+		CLASS_MAP = new HashMap<>();
+		CLASS_MAP.put("FILE", "it.rdev.rubrica.model.impl.file.ContactDAOImpl");
+		CLASS_MAP.put("RDBMS", "it.rdev.rubrica.model.impl.rdbms.ContactDAOImpl");
+	}
 	
 	public RubricaController() {
 		//AGGIUNGERE DESIGN PATTERN DYNAMIC LINK
 		
-		if(Configuration.getInstance().getValue(ConfigKeys.PERSISTENCE_TYPE).equals("RDBMS")) {
-			dao = new it.rdev.rubrica.model.impl.rdbms.ContactDAOImpl();
-		} else if(Configuration.getInstance().getValue(ConfigKeys.PERSISTENCE_TYPE).equals("FILE")) {
-			dao = new it.rdev.rubrica.model.impl.file.ContactDAOImpl();
-		}
+		
+		
+			Class<?> clazz;
+			try {
+				clazz = (Class<?>) Class.forName(
+						CLASS_MAP.get( 
+								Configuration.getInstance().getValue(
+										ConfigKeys.PERSISTENCE_TYPE) 
+								)
+						);
+				try {
+					dao = (ContactDAO) clazz.getConstructor().newInstance();
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
+		
+//		
+//		if(Configuration.getInstance().getValue(ConfigKeys.PERSISTENCE_TYPE).equals("RDBMS")) {
+//			dao = new it.rdev.rubrica.model.impl.rdbms.ContactDAOImpl();
+//		} else if(Configuration.getInstance().getValue(ConfigKeys.PERSISTENCE_TYPE).equals("FILE")) {
+//			dao = new it.rdev.rubrica.model.impl.file.ContactDAOImpl();
+//		}
 	}
 
 	public List<Contact> getContactList() {

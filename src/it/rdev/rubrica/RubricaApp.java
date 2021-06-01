@@ -30,6 +30,14 @@ public class RubricaApp {
 		
 		RubricaController controller = new RubricaController();
 		
+//		controller.addContact(new Contact().setId(1).setName("Luca").setSurname("Pangaro"));
+//		controller.getContactList();
+//		
+//		controller.addContact(new Contact().setId(2).setName("Danilo").setSurname("Di Nuzzo"));
+//		controller.getContactList();
+		
+		
+		
 		Contact con = new Contact().setName("Nuovo").setSurname("Utente");
 		con.addEmail("mail1@prova.it").addEmail("mail3@prova.it");
 		con.addPhoneNumber("123").addPhoneNumber("124").addPhoneNumber("125");
@@ -51,7 +59,7 @@ public class RubricaApp {
 		controller.updateContact(con);
 		
 		print(controller);
-		
+//		
 //		controller.removeContact(con);
 //		
 //		print(controller);

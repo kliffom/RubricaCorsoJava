@@ -9,6 +9,7 @@ public enum ConfigKeys {
 	DB_USER("app.db.username"),
 	DB_PASS("app.db.password"),
 	DB_CLASS("app.db.driver.class"),
+	DB_DAO_CLASS("app.db.daoclass"),
 	PERSISTENCE_TYPE("persistence.type"),
 	FILE_NAME("app.file.name"),
 	FILE_CLASS("app.file.class");
