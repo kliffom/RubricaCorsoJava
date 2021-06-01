@@ -33,11 +33,33 @@ public class RubricaApp {
 		nums.add("125");
 		con.setPhoneNumbers(nums);
 		
+		System.out.println(con.toString());
 		List<Contact> contatti = controller.getContactList();
 		for(Contact c: contatti) {
 			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
 		}
 		controller.addContact(con);
+		
+		contatti = controller.getContactList();
+		for(Contact c: contatti) {
+			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
+		}
+		
+		con.setName("Modificato").setSurname("Test");
+		
+		controller.updateContact(con);
+		
+		contatti = controller.getContactList();
+		for(Contact c: contatti) {
+			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
+		}
+		
+//		controller.removeContact(con);
+//		
+//		contatti = controller.getContactList();
+//		for(Contact c: contatti) {
+//			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
+//		}
 	}
 	
 }

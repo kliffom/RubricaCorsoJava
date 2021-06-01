@@ -43,6 +43,7 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 			
 			if(id!=null) {
 				System.out.println("Aggiunto contatto con ID " + id);
+				o.setId(id.intValue());		//Imposto l'ID assegnato sul DB all'oggetto per eventuali modifiche ed eliminazione della tupla
 				done=true;
 			}
 			
@@ -82,12 +83,43 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 
 	@Override
 	public boolean delete(Contact t) throws SQLException {
-		return false;
+		boolean done = false;
+		
+		try {
+			int del = this.executeUpdate("DELETE FROM " + TABLE_NAME + " WHERE id = ?", t.getId()); //L'ID viene impostato durante l'aggiunta
+			
+			if(del>0) {
+				System.out.println("Eliminato ID " + t.getId());
+				done=true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return done;
 	}
 
 	@Override
 	public boolean update(Contact t) throws SQLException {
-		return false;
+		boolean done = false;
+		
+		try {
+			int upd = this.executeUpdate("UPDATE " + TABLE_NAME + 
+					" SET name=?, surname=? WHERE id=?", 
+					t.getName(), t.getSurname(), t.getId());
+
+			
+			if(upd>0) {
+				System.out.println("Aggiornato ID " + t.getId());
+				done=true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return done;
 	}
 
 }

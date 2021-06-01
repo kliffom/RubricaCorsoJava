@@ -32,5 +32,25 @@ public class RubricaController {
 		}
 		return view;
 	}
+	
+	public boolean removeContact(Contact c) {
+		try {
+			dao.delete(c);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean updateContact(Contact c) {
+		try {
+			dao.update(c);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 
 }
