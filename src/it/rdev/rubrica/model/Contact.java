@@ -1,14 +1,15 @@
 package it.rdev.rubrica.model;
 
 import java.util.List;
+import java.util.Set;
 
 public class Contact {
 
 	private Integer id;
 	private String name;
 	private String surname;
-	private List<String> phoneNumbers;
-	private List<String> emails;
+	private Set<String> phoneNumbers;
+	private Set<String> emails;
 	
 	
 	public Contact() {}
@@ -27,17 +28,17 @@ public class Contact {
 		this.surname = surname;
 		return this;
 	}
-	public List<String> getPhoneNumbers() {
+	public Set<String> getPhoneNumbers() {
 		return phoneNumbers;
 	}
-	public Contact setPhoneNumbers(List<String> phoneNumbers) {
+	public Contact setPhoneNumbers(Set<String> phoneNumbers) {
 		this.phoneNumbers = phoneNumbers;
 		return this;
 	}
-	public List<String> getEmails() {
+	public Set<String> getEmails() {
 		return emails;
 	}
-	public Contact setEmails(List<String> emails) {
+	public Contact setEmails(Set<String> emails) {
 		this.emails = emails;
 		return this;
 	}

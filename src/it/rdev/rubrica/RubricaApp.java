@@ -2,6 +2,8 @@ package it.rdev.rubrica;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import it.rdev.rubrica.controller.RubricaController;
 import it.rdev.rubrica.model.Contact;
@@ -19,7 +21,7 @@ public class RubricaApp {
 		
 		Contact con = new Contact().setName("Nuovo").setSurname("Utente");
 		
-		List<String> mails = new ArrayList<>();
+		Set<String> mails = new TreeSet<>();
 		mails.add("mail@test.it");
 		mails.add("mail2@test.it");
 		mails.add("mail3@test.it");
@@ -27,7 +29,7 @@ public class RubricaApp {
 		mails.add("altra@mail.it");
 		con.setEmails(mails);
 		
-		List<String> nums = new ArrayList<>();
+		Set<String> nums = new TreeSet<>();
 		nums.add("123");
 		nums.add("124");
 		nums.add("125");
@@ -54,12 +56,12 @@ public class RubricaApp {
 			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
 		}
 		
-//		controller.removeContact(con);
-//		
-//		contatti = controller.getContactList();
-//		for(Contact c: contatti) {
-//			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
-//		}
+		controller.removeContact(con);
+		
+		contatti = controller.getContactList();
+		for(Contact c: contatti) {
+			System.out.println(c.getId() + ") " + c.getName() + " " + c.getSurname());
+		}
 	}
 	
 }
