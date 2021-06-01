@@ -3,16 +3,23 @@ package it.rdev.rubrica.controller;
 import java.sql.SQLException;
 import java.util.List;
 
+import it.rdev.rubrica.config.ConfigKeys;
+import it.rdev.rubrica.config.Configuration;
 import it.rdev.rubrica.model.Contact;
 import it.rdev.rubrica.model.ContactDAO;
-import it.rdev.rubrica.model.impl.rdbms.ContactDAOImpl;
 
 public class RubricaController {
 	
 	private ContactDAO dao;
 	
 	public RubricaController() {
-		dao = new ContactDAOImpl();
+		//AGGIUNGERE DESIGN PATTERN DYNAMIC LINK
+		
+		if(Configuration.getInstance().getValue(ConfigKeys.PERSISTENCE_TYPE).equals("RDBMS")) {
+			dao = new it.rdev.rubrica.model.impl.rdbms.ContactDAOImpl();
+		} else if(Configuration.getInstance().getValue(ConfigKeys.PERSISTENCE_TYPE).equals("FILE")) {
+			dao = new it.rdev.rubrica.model.impl.file.ContactDAOImpl();
+		}
 	}
 
 	public List<Contact> getContactList() {

@@ -18,13 +18,27 @@ public class ContactDAOImpl extends AbstractDAO<Contact> implements ContactDAO {
 	public List<Contact> getAll() {
 		List<Contact> contacts = new ArrayList<>();
 		try {
-			ResultSet rs = this.executeQuery("SELECT id, name, surname FROM " + TABLE_NAME);
+			ResultSet rs = this.executeQuery("SELECT c.id, c.name, c.surname, e.email, nt.telefono " + 
+					"FROM " + TABLE_NAME + " c LEFT OUTER JOIN " + EMAIL_TABLE_NAME + " e ON c.id=e.ID_contatto " +
+					"LEFT OUTER JOIN " + TEL_TABLE_NAME + " nt ON c.id=nt.ID_contatto");
+ 
 			while(rs.next()) {
-				contacts.add(
-						new Contact()
-						.setId(rs.getInt("id"))
-						.setName(rs.getString("name"))
-						.setSurname(rs.getString("surname")));
+				
+				Contact c = new Contact().setId(rs.getInt("id"));
+				if(contacts.contains(c)) {
+					c = contacts.get(contacts.indexOf(c));
+				}
+				else {
+					c.setName(rs.getString("name")).setSurname(rs.getString("surname"));
+					contacts.add(c);
+				}
+				
+				if(rs.getString("email")!=null) {
+					c.addEmail(rs.getString("email"));
+				}
+				if(rs.getString("telefono")!=null) {
+					c.addPhoneNumber(rs.getString("telefono"));
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
