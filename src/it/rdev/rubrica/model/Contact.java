@@ -43,6 +43,13 @@ public class Contact {
 		this.phoneNumbers.add(number);
 		return this;
 	}
+	public boolean hasPhoneNumbers() {
+		if(this.phoneNumbers==null || this.phoneNumbers.isEmpty())
+			return false;
+		else
+			return true;
+	}
+	
 	public Set<String> getEmails() {
 		return emails;
 	}
@@ -56,6 +63,12 @@ public class Contact {
 		}
 		this.emails.add(email);
 		return this;
+	}
+	public boolean hasEmails() {
+		if(this.emails==null || this.emails.isEmpty())
+			return false;
+		else
+			return true;
 	}
 	public Integer getId() {
 		return id;
